@@ -38,7 +38,7 @@ provider "azurerm" {
 }
 
 # -----------------------------------------------------------------------------
-# GitHub App authentication — avoids PATs entirely.
+# GitHub App authentication - avoids PATs entirely.
 # The app needs read:org scope on the target organization.
 # -----------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ data "github_organization" "this" {
 #
 # Creates the subscription, resource group, spoke VNET, hub peering, and
 # configures DNS to forward queries to the hub firewall DNS proxy.
-# The VNET is placed in Sweden Central — a supported GHE.com EU region.
+# The VNET is placed in Sweden Central - a supported GHE.com EU region.
 # -----------------------------------------------------------------------------
 
 module "lz_vending" {
@@ -90,13 +90,13 @@ module "lz_vending" {
       resource_group_creation_enabled = false
       resource_group_name             = "rg-ghrunners-swedencentral"
 
-      # Hub peering — connects spoke to hub in Norway East
+      # Hub peering - connects spoke to hub in Norway East
       hub_peering_enabled               = true
       hub_network_resource_id           = var.hub_vnet_id
       hub_peering_use_remote_gateways   = var.enable_gateway_transit
       hub_peering_allow_gateway_transit = var.enable_gateway_transit
 
-      # DNS — point spoke at hub so runners resolve private endpoints
+      # DNS - point spoke at hub so runners resolve private endpoints
       # in Norway East (e.g. *.privatelink.blob.core.windows.net)
       dns_servers = var.hub_dns_servers
     }

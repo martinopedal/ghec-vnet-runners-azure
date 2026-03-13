@@ -2,7 +2,7 @@
 # Route Table
 #
 # Forces all internet-bound egress through the hub firewall via UDR.
-# This replaces the need for a NAT Gateway — the hub firewall handles SNAT
+# This replaces the need for a NAT Gateway - the hub firewall handles SNAT
 # and outbound policy enforcement.
 #
 # BGP propagation is left enabled so gateway routes (VPN/ER) advertised by

@@ -2,7 +2,7 @@
 # Runner Subnet
 #
 # Created inside the VNET provisioned by the LZ vending module.
-# Delegated exclusively to GitHub.Network/networkSettings — no other NICs or
+# Delegated exclusively to GitHub.Network/networkSettings - no other NICs or
 # services may coexist. A service association link is applied automatically
 # by the GitHub.Network RP, preventing accidental deletion while in use.
 #

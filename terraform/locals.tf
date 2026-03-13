@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 
 locals {
-  # GitHub Actions service endpoints — EU data residency backend.
+  # GitHub Actions service endpoints - EU data residency backend.
   # CX doc Section 4.3
   github_actions_ips_eu = [
     "74.241.192.231/32",
@@ -18,7 +18,7 @@ locals {
     "20.31.193.160/32",
   ]
 
-  # GHE.com EU region ingress IPs — runners must reach these outbound.
+  # GHE.com EU region ingress IPs - runners must reach these outbound.
   # CX doc Section 4.4
   ghecom_eu_region_ips = [
     "108.143.197.176/28",

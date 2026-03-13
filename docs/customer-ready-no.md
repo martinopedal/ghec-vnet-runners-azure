@@ -79,7 +79,7 @@ https://learn.microsoft.com/azure/azure-resource-manager/management/resource-pro
 
 I en hub-spoke topologi med UDR som ruter 0.0.0.0/0 til hub-firewallen, gaar all
 outbound internettrafikk gjennom firewallen. NSG-en trenger ikke outbound-regler
-for GitHub IP-er, Storage eller Entra ID — det er hub-firewallens ansvar
+for GitHub IP-er, Storage eller Entra ID - det er hub-firewallens ansvar
 (se seksjon 6). Azure sine standard outbound-regler tillater trafikken aa naa
 UDR next-hop, og firewallen haandterer allowlistene.
 

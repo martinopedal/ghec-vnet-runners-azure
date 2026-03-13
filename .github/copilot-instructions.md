@@ -36,10 +36,10 @@ Use the `azure-mcp-documentation` MCP tool with `microsoft_docs_fetch` to retrie
 
 The module creates four resources on top of a pre-existing spoke VNET from LZ vending:
 
-1. **Runner Subnet** (`main.tf`) — delegated to `GitHub.Network/networkSettings`, NSG + UDR attached at creation
-2. **NSG** (`nsg.tf`) — inbound deny-all only; outbound policy is the hub firewall's responsibility
-3. **Route Table** (`routing.tf`) — `0.0.0.0/0` next-hop to hub firewall (UDR)
-4. **GitHub.Network/networkSettings** (`network_settings.tf`) — links the subnet to GHE.com enterprise/org
+1. **Runner Subnet** (`main.tf`) - delegated to `GitHub.Network/networkSettings`, NSG + UDR attached at creation
+2. **NSG** (`nsg.tf`) - inbound deny-all only; outbound policy is the hub firewall's responsibility
+3. **Route Table** (`routing.tf`) - `0.0.0.0/0` next-hop to hub firewall (UDR)
+4. **GitHub.Network/networkSettings** (`network_settings.tf`) - links the subnet to GHE.com enterprise/org
 
 ### Key design decisions
 
@@ -93,8 +93,8 @@ The GHE.com IP ranges in `locals.tf` are sourced from the GitHub documentation. 
 
 Before committing changes:
 
-1. `cd terraform && terraform init && terraform validate` — all code changes must pass
-2. `terraform fmt -check -recursive` — formatting must be consistent
+1. `cd terraform && terraform init && terraform validate` - all code changes must pass
+2. `terraform fmt -check -recursive` - formatting must be consistent
 3. Verify Mermaid diagrams in README.md render correctly on GitHub
 4. Validate GHE.com IP ranges against current documentation using `azure-mcp-documentation` or `web_fetch`
 5. Check that NSG rules follow the design (inbound deny-all only, no outbound rules)

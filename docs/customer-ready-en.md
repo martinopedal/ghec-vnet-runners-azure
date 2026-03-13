@@ -56,7 +56,7 @@ firewall or network virtual appliance via UDR.
 
 In a hub-spoke topology with a UDR routing 0.0.0.0/0 to the hub firewall, outbound
 internet traffic always passes through the firewall. The NSG does not need outbound
-rules for GitHub IPs, Storage, or Entra ID — that is the hub firewall's responsibility
+rules for GitHub IPs, Storage, or Entra ID - that is the hub firewall's responsibility
 (see Section 6). Azure's default outbound rules allow traffic to flow to the UDR
 next-hop, and the firewall applies the allowlists.
 

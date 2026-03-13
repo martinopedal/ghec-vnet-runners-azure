@@ -19,7 +19,7 @@ variable "virtual_network_id" {
 # -----------------------------------------------------------------------------
 # Region
 #
-# Must match the VNET location. Defaults to swedencentral — the most common
+# Must match the VNET location. Defaults to swedencentral - the most common
 # choice for Nordic customers. Override if the vending module placed the VNET
 # in a different supported EU region.
 # -----------------------------------------------------------------------------
