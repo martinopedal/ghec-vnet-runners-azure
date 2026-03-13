@@ -1,4 +1,4 @@
-# Copilot Instructions – GHEC VNET Runners Azure (azapi)
+# Copilot Instructions - GHEC VNET Runners Azure (azapi)
 
 ## What this repo is
 
