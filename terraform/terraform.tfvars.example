@@ -1,0 +1,42 @@
+# =============================================================================
+# Example: ALZ Corp with LZ Vending
+#
+# The LZ vending module pre-provisions the subscription, resource group,
+# spoke VNet, hub peering, and DNS configuration. This module adds the
+# runner subnet, NSG, UDR, and GitHub.Network/networkSettings.
+#
+# Copy this file to terraform.tfvars and fill in the values.
+# =============================================================================
+
+# Full resource ID of the resource group created by LZ vending
+# resource_group_id = "/subscriptions/<sub-id>/resourceGroups/rg-ghrunners-swedencentral"
+
+# Full resource ID of the spoke VNET created by LZ vending
+# virtual_network_id = "/subscriptions/<sub-id>/resourceGroups/rg-ghrunners-swedencentral/providers/Microsoft.Network/virtualNetworks/vnet-ghrunners-swedencentral"
+
+# Azure region — must match VNET region and be a supported GHE.com EU region
+# Supported: francecentral, swedencentral, germanywestcentral, northeurope, italynorth
+location = "swedencentral"
+
+# CIDR for the runner subnet — /24 minimum recommended
+# subnet_address_prefix = "10.100.0.0/24"
+
+# Private IP of the hub firewall or NVA (next-hop for UDR)
+# hub_firewall_private_ip = "10.0.1.4"
+
+# GitHub enterprise or organization databaseId
+# Obtain via: tostring(data.github_organization.this.id) or GraphQL API
+# github_business_id = "12345678"
+
+# Optional: override resource names
+# subnet_name           = "snet-github-runners"
+# nsg_name              = "nsg-github-runners"
+# route_table_name      = "rt-github-runners"
+# network_settings_name = "ghrunners-network-settings"
+
+# Tags applied to all resources
+# tags = {
+#   environment = "production"
+#   team        = "platform-engineering"
+#   managedBy   = "terraform"
+# }

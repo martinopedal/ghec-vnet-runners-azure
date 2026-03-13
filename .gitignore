@@ -1,16 +1,20 @@
 # Terraform
-**/.terraform/
+.terraform/
 *.tfstate
 *.tfstate.*
 *.tfplan
 *.tfvars
 !terraform.tfvars.example
-.terraform.lock.hcl
 crash.log
+crash.*.log
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+.terraformrc
+terraform.rc
+# .terraform.lock.hcl is intentionally committed per HashiCorp best practice
+# for reproducible provider versions across team and CI/CD.
 
 # IDE
 .vscode/
