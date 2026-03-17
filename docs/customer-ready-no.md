@@ -59,6 +59,14 @@ https://docs.github.com/en/enterprise-cloud@latest/admin/configuring-settings/co
 En NAT Gateway er ikke paakrevd naar utgaaende internettrafikk rutes gjennom en
 hub-firewall eller virtuell nettverksapparat (NVA) via UDR.
 
+**AVNM (Azure Virtual Network Manager):** Hvis ALZ-plattformen bruker AVNM for
+hub-spoke-kobling i stedet for manuell VNET-peering, kobles spoke-VNET-et fra
+landing zone vending-modulen til huben via en AVNM network group. Runner-designet
+er likt i begge tilfeller - modulen trenger bare spoke-VNET-ID og privat IP til
+hub-firewallen. AVNM haandterer peering-livssyklus, rutepropagering og security
+admin rules. Verifiser at connectivity configuration lar runner-subnettet naa
+hub-firewallen via UDR-en.
+
 Ref: Azure-maler for GitHub.Network/networkSettings (Bicep/ARM/Terraform)
 https://learn.microsoft.com/azure/templates/github.network/networksettings
 
@@ -218,39 +226,103 @@ i NSG-reglene ovenfor. Foelgende tabell oppsummerer det paakrevde firewallregels
 | GitHub Actions-tjeneste (EU)         | IP-adresser fra tabell 4.3                         | 443  | TCP       |
 | GHE.com EU-infrastruktur             | IP-adresser fra tabell 4.4                         | 443  | TCP       |
 | GitHub.com                           | IP-adresser fra tabell 4.5                         | 443  | TCP       |
-| Azure Blob Storage                   | Storage-Service Tag eller FQDN-er fra tabell 6.1   | 443  | TCP       |
-| Microsoft Entra ID                   | AzureActiveDirectory-Service Tag                   | 443  | TCP       |
+| Azure Blob Storage                   | Storage-Service Tag eller FQDN-er fra seksjon 6.1-6.2 | 443  | TCP       |
+| Microsoft Entra ID                   | AzureActiveDirectory-Service Tag                     | 443  | TCP       |
+| Azure Monitor (valgfritt)            | AzureMonitor-Service Tag eller FQDN-er fra seksjon 6.3 | 443  | TCP       |
 
 ### 6.1 FQDN-baserte firewall-regler
 
 Dersom hub-firewallen stoetter FQDN-filtrering, maa foelgende domener vaere tillatt.
 
-| Domene                                | Purpose                                             |
-|---------------------------------------|-----------------------------------------------------|
-| *.[TENANT].ghe.com                    | GHE.com enterprise-instans                          |
-| [TENANT].ghe.com                      | GHE.com enterprise-instans                          |
-| auth.ghe.com                          | GHE.com autentisering                               |
-| github.com                            | GitHub plattformtjenester                           |
-| *.githubusercontent.com               | GitHub-hostet innhold (release-assets, raafiler)    |
-| *.blob.core.windows.net               | Azure Blob Storage (bredt; begrens per tabell 6.2)  |
-| *.web.core.windows.net                | Azure Web Storage                                   |
-| *.githubassets.com                     | GitHub statiske ressurser                           |
+| Domene | Hvorfor |
+|--------|---------|
+| `*.[TENANT].ghe.com` | GHE.com enterprise API, Git, pakker. Alle enterprise-tjenester rutes hit |
+| `[TENANT].ghe.com` | GHE.com enterprise webportal |
+| `auth.ghe.com` | GHE.com autentiseringstjeneste |
+| `github.com` | GitHub plattformtjenester. Paakrevd for alle GHE.com-regioner ifoelge GitHub-dokumentasjonen |
+| `*.githubusercontent.com` | Runner-versjonsoppdateringer, raainnhold, release-assets |
+| `*.blob.core.windows.net` | Azure Blob Storage. Brukes til jobbsammendrag, logger, artefakter, cacher |
+| `*.web.core.windows.net` | Azure Web Storage. Brukes av GitHub for webbasert innhold |
+| `*.githubassets.com` | GitHub statiske ressurser (JS, CSS, bilder) |
+| `login.microsoftonline.com` | Primaert Entra ID-endepunkt. Henting av managed identity-token |
+| `*.login.microsoftonline.com` | Regionale Entra ID-endepunkter |
+| `*.login.microsoft.com` | Entra ID fallback. Noen Azure SDK-er bruker dette domenet |
+| `management.azure.com` | Azure Resource Manager. Trengs hvis runnere skal ha tilgang til Azure-ressurser |
+| `*.identity.azure.net` | IMDS managed identity-tokenendepunkt. Runner-VM-er ber om token ved oppstart |
 
 ### 6.2 EU-spesifikke Storage Account-FQDN-er (anbefalt innsnevring)
 
-I stedet for aa tillate *.blob.core.windows.net kan foelgende FQDN-er brukes for en
+I stedet for aa tillate `*.blob.core.windows.net` kan foelgende FQDN-er brukes for en
 strammere firewallpolitikk.
 
-| FQDN                                           |
-|-------------------------------------------------|
-| prodsdc01resultssa0.blob.core.windows.net       |
-| prodsdc01resultssa1.blob.core.windows.net       |
-| prodsdc01resultssa2.blob.core.windows.net       |
-| prodsdc01resultssa3.blob.core.windows.net       |
-| prodweu01resultssa0.blob.core.windows.net       |
-| prodweu01resultssa1.blob.core.windows.net       |
-| prodweu01resultssa2.blob.core.windows.net       |
-| prodweu01resultssa3.blob.core.windows.net       |
+| FQDN |
+|------|
+| `prodsdc01resultssa0.blob.core.windows.net` |
+| `prodsdc01resultssa1.blob.core.windows.net` |
+| `prodsdc01resultssa2.blob.core.windows.net` |
+| `prodsdc01resultssa3.blob.core.windows.net` |
+| `prodweu01resultssa0.blob.core.windows.net` |
+| `prodweu01resultssa1.blob.core.windows.net` |
+| `prodweu01resultssa2.blob.core.windows.net` |
+| `prodweu01resultssa3.blob.core.windows.net` |
+
+### 6.3 Valgfrie Azure Monitor-FQDN-er
+
+Hvis diagnostikk er aktivert, tillat foelgende domener.
+
+| Domene | Hvorfor |
+|--------|---------|
+| `*.ods.opinsights.azure.com` | Log Analytics dataingest (hvis diagnostikk brukes) |
+| `*.oms.opinsights.azure.com` | Log Analytics-operasjoner (hvis diagnostikk brukes) |
+| `*.ingest.monitor.azure.com` | Data Collection Endpoint (hvis diagnostikk brukes) |
+| `*.monitor.azure.com` | Azure Monitor kontrollplan (hvis diagnostikk brukes) |
+
+### 6.4 Copy-Pasteable Azure Firewall Rule Collection
+
+Replace `<runner-subnet-cidr>` with the runner subnet CIDR and `[TENANT]` with your
+GHE.com subdomain.
+
+```text
+Rule Collection: rc-ghec-runners-application
+Priority: 200
+Action: Allow
+
+Rules:
+  - Name: ghecom-runners
+    Source: <runner-subnet-cidr>
+    FQDNs: [TENANT].ghe.com, *.[TENANT].ghe.com,
+           *.actions.[TENANT].ghe.com, auth.ghe.com,
+           github.com, *.githubassets.com,
+           *.githubusercontent.com,
+           *.blob.core.windows.net, *.web.core.windows.net
+    Protocol: Https:443
+
+  - Name: azure-platform
+    Source: <runner-subnet-cidr>
+    FQDNs: login.microsoftonline.com, *.login.microsoftonline.com,
+           *.login.microsoft.com, management.azure.com,
+           *.identity.azure.net
+    Protocol: Https:443
+
+  - Name: azure-monitor (optional - if diagnostics enabled)
+    Source: <runner-subnet-cidr>
+    FQDNs: *.ods.opinsights.azure.com, *.oms.opinsights.azure.com,
+           *.ingest.monitor.azure.com, *.monitor.azure.com
+    Protocol: Https:443
+```
+
+```text
+Rule Collection: rc-ghec-runners-network
+Priority: 200
+Action: Allow
+
+Rules:
+  - Name: azure-services
+    Source: <runner-subnet-cidr>
+    Service Tags: Storage, AzureActiveDirectory, AzureMonitor
+    Protocol: TCP
+    Port: 443
+```
 
 Ref: Azure Firewall FQDN-filtrering
 https://learn.microsoft.com/azure/firewall/fqdn-filtering-network-rules

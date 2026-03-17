@@ -146,6 +146,8 @@ flowchart LR
 
 ---
 
+> **AVNM (Azure Virtual Network Manager):** If the ALZ platform uses AVNM for hub-spoke connectivity instead of manual VNET peering, the spoke VNET from LZ Vending is connected to the hub through an AVNM network group. This module works the same way in both cases - it only needs the spoke VNET ID and the hub firewall IP. AVNM handles the peering lifecycle, route propagation, and security admin rules. Verify that the connectivity configuration allows the runner subnet to reach the hub firewall through the UDR.
+
 ## What LZ Vending Creates vs. What This Module Creates
 
 | Resource | Created by | Notes |
@@ -313,16 +315,21 @@ The hub firewall must allow the following outbound destinations for the runner s
 
 ### FQDN Rules
 
-| Domain | Purpose |
-|---|---|
-| `*.[TENANT].ghe.com` | GHE.com enterprise instance |
-| `[TENANT].ghe.com` | GHE.com enterprise instance |
-| `auth.ghe.com` | GHE.com authentication |
-| `github.com` | GitHub platform services |
-| `*.githubusercontent.com` | GitHub-hosted content |
-| `*.blob.core.windows.net` | Azure Blob Storage (restrict to EU FQDNs below if possible) |
-| `*.web.core.windows.net` | Azure Web Storage |
-| `*.githubassets.com` | GitHub static assets |
+| Domain | Why needed |
+|--------|------------|
+| `*.[TENANT].ghe.com` | GHE.com enterprise API, Git, packages. All enterprise services route through this |
+| `[TENANT].ghe.com` | GHE.com enterprise web portal |
+| `auth.ghe.com` | GHE.com authentication service |
+| `github.com` | GitHub platform services. Required for all GHE.com regions per GitHub docs |
+| `*.githubusercontent.com` | Runner version updates, raw content, release assets |
+| `*.blob.core.windows.net` | Azure Blob Storage. Used for job summaries, logs, artifacts, caches |
+| `*.web.core.windows.net` | Azure Web Storage. Used by GitHub for web-based content |
+| `*.githubassets.com` | GitHub static assets (JS, CSS, images) |
+| `login.microsoftonline.com` | Primary Entra ID endpoint. Managed identity token acquisition |
+| `*.login.microsoftonline.com` | Regional Entra ID endpoints |
+| `*.login.microsoft.com` | Entra ID fallback. Some Azure SDKs use this domain |
+| `management.azure.com` | Azure Resource Manager. Needed if runners access Azure resources |
+| `*.identity.azure.net` | IMDS managed identity token endpoint. Runner VMs request tokens on startup |
 
 ### EU-Specific Storage FQDNs
 
@@ -338,6 +345,61 @@ Tighter alternative to `*.blob.core.windows.net` for a more restrictive firewall
 | `prodweu01resultssa1.blob.core.windows.net` |
 | `prodweu01resultssa2.blob.core.windows.net` |
 | `prodweu01resultssa3.blob.core.windows.net` |
+
+### Optional Azure Monitor FQDNs (if diagnostics enabled)
+
+| Domain | Why needed |
+|--------|------------|
+| `*.ods.opinsights.azure.com` | Log Analytics data ingestion (if using diagnostics) |
+| `*.oms.opinsights.azure.com` | Log Analytics operations (if using diagnostics) |
+| `*.ingest.monitor.azure.com` | Data Collection Endpoint (if using diagnostics) |
+| `*.monitor.azure.com` | Azure Monitor control plane (if using diagnostics) |
+
+### Copy-Pasteable Azure Firewall Rule Collection
+
+Replace `<runner-subnet-cidr>` with the runner subnet CIDR and `[TENANT]` with your GHE.com subdomain.
+
+```text
+Rule Collection: rc-ghec-runners-application
+Priority: 200
+Action: Allow
+
+Rules:
+  - Name: ghecom-runners
+    Source: <runner-subnet-cidr>
+    FQDNs: [TENANT].ghe.com, *.[TENANT].ghe.com,
+           *.actions.[TENANT].ghe.com, auth.ghe.com,
+           github.com, *.githubassets.com,
+           *.githubusercontent.com,
+           *.blob.core.windows.net, *.web.core.windows.net
+    Protocol: Https:443
+
+  - Name: azure-platform
+    Source: <runner-subnet-cidr>
+    FQDNs: login.microsoftonline.com, *.login.microsoftonline.com,
+           *.login.microsoft.com, management.azure.com,
+           *.identity.azure.net
+    Protocol: Https:443
+
+  - Name: azure-monitor (optional - if diagnostics enabled)
+    Source: <runner-subnet-cidr>
+    FQDNs: *.ods.opinsights.azure.com, *.oms.opinsights.azure.com,
+           *.ingest.monitor.azure.com, *.monitor.azure.com
+    Protocol: Https:443
+```
+
+```text
+Rule Collection: rc-ghec-runners-network
+Priority: 200
+Action: Allow
+
+Rules:
+  - Name: azure-services
+    Source: <runner-subnet-cidr>
+    Service Tags: Storage, AzureActiveDirectory, AzureMonitor
+    Protocol: TCP
+    Port: 443
+```
 
 ---
 
