@@ -1,8 +1,40 @@
 # GitHub-Hosted Runners VNET Integration for GHE.com (EU Data Residency)
 
-Terraform module that provisions the Azure-side infrastructure for VNET-integrated GitHub-hosted runners on GitHub Enterprise Cloud with EU data residency (GHE.com). Built with the [AzAPI provider](https://registry.terraform.io/providers/Azure/azapi/latest/docs) for direct ARM API access to the `GitHub.Network/networkSettings` resource type.
+Provisions the Azure networking resources needed to run GitHub-hosted runners inside your own VNET on GHE.com (GitHub Enterprise Cloud with EU data residency).
 
-Designed to layer on top of the [Azure Landing Zone Vending module](https://registry.terraform.io/modules/Azure/lz-vending/azurerm/latest). The subscription, resource group, spoke VNET, hub peering, and DNS are all pre-existing from the vending module. This module adds only what the vending module does not provide: a dedicated runner subnet, a locked-down NSG, a UDR for hub firewall egress, and the `GitHub.Network/networkSettings` resource that links the subnet to GHE.com.
+## Why this exists
+
+GitHub-hosted runners normally run on GitHub's shared infrastructure and reach the internet directly. When your enterprise uses GHE.com with EU data residency, runners must connect through an Azure VNET so that traffic stays in-region and routes through your hub firewall. Setting this up by hand means creating a delegated subnet, an NSG, a route table, and the `GitHub.Network/networkSettings` ARM resource, then wiring them together correctly. This module does all of that in one `terraform apply`.
+
+It layers on top of the [Azure Landing Zone Vending module](https://registry.terraform.io/modules/Azure/lz-vending/azurerm/latest). The vending module creates the subscription, resource group, spoke VNET, hub peering, and DNS. This module adds only what the vending module does not provide: the runner subnet, NSG, UDR for hub firewall egress, and the `GitHub.Network/networkSettings` resource that links the subnet to GHE.com.
+
+Built with the [AzAPI provider](https://registry.terraform.io/providers/Azure/azapi/latest/docs) for direct ARM API access to the `GitHub.Network/networkSettings` resource type.
+
+## Quick start
+
+Minimum working configuration (assumes you already have a spoke VNET from LZ Vending):
+
+```hcl
+module "github_runners" {
+  source = "github.com/martinopedal/ghec-vnet-runners-azure//terraform"
+
+  resource_group_id       = "/subscriptions/SUBSCRIPTION_ID/resourceGroups/rg-ghrunners"
+  virtual_network_id      = "/subscriptions/SUBSCRIPTION_ID/resourceGroups/rg-ghrunners/providers/Microsoft.Network/virtualNetworks/vnet-spoke"
+  subnet_address_prefix   = "10.100.0.0/24"
+  hub_firewall_private_ip = "10.0.1.4"
+  github_business_id      = "12345678"  # your org/enterprise databaseId
+}
+```
+
+```bash
+# Register the resource provider (one-time)
+az provider register --namespace GitHub.Network
+
+# Deploy
+terraform init && terraform apply
+```
+
+After `apply` completes, copy the `github_id` output and paste it into GHE.com under Enterprise Settings, Hosted compute networking, New network configuration.
 
 ## Table of Contents
 
@@ -146,7 +178,7 @@ flowchart LR
 
 ---
 
-> **AVNM (Azure Virtual Network Manager):** If the ALZ platform uses AVNM for hub-spoke connectivity instead of manual VNET peering, the spoke VNET from LZ Vending is connected to the hub through an AVNM network group. This module works the same way in both cases - it only needs the spoke VNET ID and the hub firewall IP. AVNM handles the peering lifecycle, route propagation, and security admin rules. Verify that the connectivity configuration allows the runner subnet to reach the hub firewall through the UDR.
+> **AVNM (Azure Virtual Network Manager):** If the ALZ platform uses AVNM for hub-spoke connectivity instead of manual VNET peering, the spoke VNET from LZ Vending is connected to the hub through an AVNM network group. This module works the same way in both cases. It only needs the spoke VNET ID and the hub firewall IP. AVNM handles the peering lifecycle, route propagation, and security admin rules. Verify that the connectivity configuration allows the runner subnet to reach the hub firewall through the UDR.
 
 ## What LZ Vending Creates vs. What This Module Creates
 
