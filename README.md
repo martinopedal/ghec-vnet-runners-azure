@@ -171,10 +171,10 @@ flowchart LR
 
 | # | Flow | Path | Notes |
 |---|---|---|---|
-| 1 | **Egress** | Runner → UDR → Hub Firewall → Internet | All outbound is FQDN-filtered by the hub firewall |
-| 2 | **GitHub Actions** | Runner → Hub Firewall → GHE.com EU IPs | Runners register and pick up jobs from GHE.com |
-| 3 | **Storage/Entra** | Runner → Hub Firewall → Service tags | Artifacts, logs, caches, and managed identity tokens |
-| 4 | **DNS** | Runner → Hub DNS (via peering) | Resolves private endpoint FQDNs for Norway East resources |
+| 1 | **Egress** | Runner > UDR > Hub Firewall > Internet | All outbound is FQDN-filtered by the hub firewall |
+| 2 | **GitHub Actions** | Runner > Hub Firewall > GHE.com EU IPs | Runners register and pick up jobs from GHE.com |
+| 3 | **Storage/Entra** | Runner > Hub Firewall > Service tags | Artifacts, logs, caches, and managed identity tokens |
+| 4 | **DNS** | Runner > Hub DNS (via peering) | Resolves private endpoint FQDNs for Norway East resources |
 
 ---
 
@@ -526,7 +526,7 @@ Outbound traffic from the runner subnet **must not** be subject to TLS inspectio
 | `nsg_id` | Resource ID of the Network Security Group. |
 | `route_table_id` | Resource ID of the route table. |
 | `network_settings_id` | Resource ID of the GitHub.Network/networkSettings resource. |
-| `github_id` | GitHubId from the networkSettings resource. Paste this into the GHE.com network configuration UI under Enterprise Settings → Hosted compute networking → New network configuration. |
+| `github_id` | GitHubId from the networkSettings resource. Paste this into the GHE.com network configuration UI under Enterprise Settings > Hosted compute networking > New network configuration. |
 
 ---
 
