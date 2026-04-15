@@ -101,3 +101,13 @@ Before committing changes:
 6. Confirm supported regions list matches current GHE.com documentation
 7. Ensure customer-ready docs (`docs/`) are consistent with README content
 8. Cross-reference firewall rules against [GHE.com network details](https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/network-details-for-ghecom)
+
+## Security rules
+- No secrets in code - use environment variables or GitHub Secrets
+- SHA-pin all GitHub Actions to commit SHAs
+- Use actions/checkout@v6 and actions/setup-python@v6 (Node.js 24 compatible)
+- No enforce_admins on branch protection
+- CodeQL enabled for code scanning
+
+## GitHub-first principle
+Validate changes in GitHub Actions, not locally. Push, trigger workflow, check logs, iterate.
