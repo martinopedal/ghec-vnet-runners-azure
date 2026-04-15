@@ -96,7 +96,7 @@ No explicit outbound NSG rules are required. Outbound traffic flows as follows:
 All outbound allowlists (GitHub IPs, Storage, Entra ID, FQDNs) are documented in
 Section 6 and must be configured on the hub firewall.
 
-### 4.3 GitHub Actions IPs -- EU (GHE.com)
+### 4.3 GitHub Actions IPs - EU (GHE.com)
 
 | IP Address / Range     |
 |------------------------|

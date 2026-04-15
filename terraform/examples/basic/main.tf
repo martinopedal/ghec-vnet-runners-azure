@@ -113,7 +113,7 @@ module "lz_vending" {
 # -----------------------------------------------------------------------------
 
 module "github_runners" {
-  source = "../../terraform"
+  source = "../../"
 
   resource_group_id       = module.lz_vending.resource_group_resource_ids["rg-runners"]
   virtual_network_id      = module.lz_vending.virtual_network_resource_ids["vnet-runners"]
