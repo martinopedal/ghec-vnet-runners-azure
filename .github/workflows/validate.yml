@@ -1,0 +1,60 @@
+name: "Validate"
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: Terraform Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85  # v4.0.0
+        with:
+          terraform_version: "~1.9"
+
+      - name: Terraform Init
+        run: terraform init -backend=false
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+  style:
+    name: Style Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+
+      - name: Check for em/en dashes in code files
+        run: |
+          if grep -rPn '[\x{2013}\x{2014}]' --include='*.tf' --include='*.example' --include='*.md' .; then
+            echo "::error::Found em/en dash characters. Use hyphens (-) or rewrite."
+            exit 1
+          fi
+
+      - name: Check for double-dash em-dash approximations
+        run: |
+          if grep -rPn '\s--\s' --include='*.tf' --include='*.example' --include='*.md' .; then
+            echo "::error::Found double-dash em-dash approximations. Use colons, periods, or commas."
+            exit 1
+          fi
+
+      - name: Check for non-allowed emojis
+        run: |
+          if grep -rPn '[\x{1F300}-\x{1F9FF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}]' --include='*.tf' --include='*.example' . 2>/dev/null; then
+            echo "::error::Found emojis in code files. No emojis allowed in .tf or .example files."
+            exit 1
+          fi
