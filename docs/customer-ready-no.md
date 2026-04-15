@@ -123,7 +123,7 @@ i seksjon 6 og maa konfigureres paa hub-firewallen.
 Ref: Azure-Service Tagger for NSG
 https://learn.microsoft.com/azure/virtual-network/service-tags-overview
 
-### 4.3 GitHub Actions IP-adresser -- EU (GHE.com)
+### 4.3 GitHub Actions IP-adresser - EU (GHE.com)
 
 | IP-adresse / rekkevidde |
 |-------------------------|
