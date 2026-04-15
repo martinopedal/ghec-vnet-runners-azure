@@ -11,6 +11,7 @@
 locals {
   # GitHub Actions service endpoints - EU data residency backend.
   # CX doc Section 4.3
+  # tflint-ignore: terraform_unused_declarations
   github_actions_ips_eu = [
     "74.241.192.231/32",
     "20.4.161.108/32",
@@ -20,6 +21,7 @@ locals {
 
   # GHE.com EU region ingress IPs - runners must reach these outbound.
   # CX doc Section 4.4
+  # tflint-ignore: terraform_unused_declarations
   ghecom_eu_region_ips = [
     "108.143.197.176/28",
     "20.123.213.96/28",
@@ -31,6 +33,7 @@ locals {
 
   # GitHub.com IPs required for all GHE.com regions.
   # CX doc Section 4.5
+  # tflint-ignore: terraform_unused_declarations
   github_com_ips = [
     "192.30.252.0/22",
     "185.199.108.0/22",
