@@ -117,8 +117,8 @@ Before committing changes:
 
 ## Security rules
 - No secrets in code - use environment variables or GitHub Secrets
-- SHA-pin all GitHub Actions to commit SHAs
-- Use actions/checkout@v6 and actions/setup-python@v6 (Node.js 24 compatible)
+- SHA-pin all GitHub Actions to commit SHAs (e.g., `actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6`)
+- Target actions/checkout v6 and actions/setup-python v6 (Node.js 24 compatible) — always pin by SHA, not tag
 - No enforce_admins on branch protection
 - CodeQL enabled for code scanning
 
