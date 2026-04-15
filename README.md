@@ -555,6 +555,15 @@ Detailed infrastructure requirements, IP lists, firewall rules, and DNS options 
 
 ---
 
+## Built with Azure Verified Modules
+
+This module follows the [Azure Verified Modules (AVM)](https://aka.ms/avm) specification.
+AVM modules are open-source, MIT-licensed, and maintained by Microsoft and community contributors.
+
+See [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) for full license details of all
+incorporated components.
+
+---
 ## License
 
 MIT
