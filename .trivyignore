@@ -1,0 +1,3 @@
+# Trivy ignore file
+# Add CVE IDs or misconfiguration IDs to suppress known false-positives.
+# Example: CVE-2023-12345
