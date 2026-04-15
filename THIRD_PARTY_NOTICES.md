@@ -22,7 +22,7 @@ and virtual network ID as inputs.
 
 ## HashiCorp Terraform Providers
 
-- **azapi provider:** https://github.com/Azure/terraform-provider-azapi — MPL-2.0
+- **azapi provider:** https://github.com/Azure/terraform-provider-azapi (MPL-2.0)
 - **Providers are downloaded at `terraform init` time and are not bundled in this repository.**
 
 > **Note on MPL-2.0:** The Mozilla Public License 2.0 is a weak copyleft license that applies
