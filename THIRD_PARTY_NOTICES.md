@@ -1,7 +1,7 @@
 # Third-Party Notices
 
 This module depends on the Terraform providers listed below. It does not source any
-AVM registry modules directly — all Azure resources are provisioned via the `azapi` provider.
+AVM registry modules directly - all Azure resources are provisioned via the `azapi` provider.
 The module is designed to consume outputs from AVM Landing Zone modules
 (e.g. [`Azure/lz-vending/azurerm`](https://registry.terraform.io/modules/Azure/lz-vending/azurerm/latest))
 but does not include them as dependencies.
