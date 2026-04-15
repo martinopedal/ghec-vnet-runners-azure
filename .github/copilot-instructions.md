@@ -1,3 +1,16 @@
+## Memory Vault
+
+Before starting any work, read the local memory vault:
+
+1. `C:\git\memory-vault\AGENTS.md` — operating instructions
+2. `C:\git\memory-vault\index.md` — map of all knowledge
+3. `C:\git\memory-vault\global\current-focus.md` — what is actively being worked on
+4. `C:\git\memory-vault\wiki\projects\ghec-vnet-runners-azure\index.md` — this project's memory bank
+
+At the end of the session, run the `session-close` skill to save new knowledge to the vault.
+
+---
+
 # Copilot Instructions - GHEC VNET Runners Azure (azapi)
 
 ## What this repo is
