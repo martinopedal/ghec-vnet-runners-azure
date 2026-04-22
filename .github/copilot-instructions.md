@@ -1,16 +1,3 @@
-## Memory Vault
-
-Before starting any work, read the local memory vault:
-
-1. `C:\git\memory-vault\AGENTS.md` - operating instructions
-2. `C:\git\memory-vault\index.md` - map of all knowledge
-3. `C:\git\memory-vault\global\current-focus.md` - what is actively being worked on
-4. `C:\git\memory-vault\wiki\projects\ghec-vnet-runners-azure\index.md` - this project's memory bank
-
-At the end of the session, run the `session-close` skill to save new knowledge to the vault.
-
----
-
 # Copilot Instructions - GHEC VNET Runners Azure (azapi)
 
 ## What this repo is
@@ -117,8 +104,8 @@ Before committing changes:
 
 ## Security rules
 - No secrets in code - use environment variables or GitHub Secrets
-- SHA-pin all GitHub Actions to commit SHAs (e.g., `actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6`)
-- Target actions/checkout v6 and actions/setup-python v6 (Node.js 24 compatible) - always pin by SHA, not tag
+- SHA-pin all GitHub Actions to commit SHAs
+- Use actions/checkout@v6 and actions/setup-python@v6 (Node.js 24 compatible)
 - No enforce_admins on branch protection
 - CodeQL enabled for code scanning
 
