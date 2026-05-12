@@ -320,8 +320,8 @@ Reference: https://docs.github.com/en/enterprise-cloud@latest/admin/configuring-
 |--------------------------------------|----------------------------------------------------------------------------------|
 | Azure role: Subscription Contributor | Required to register the GitHub.Network resource provider                        |
 | Azure role: Network Contributor      | Required to delegate the subnet and manage network resources                     |
-| Enterprise Application 1            | GitHub CPS Network Service (App ID: 85c49807-809d-4249-86e7-192762525474)       |
-| Enterprise Application 2            | GitHub Actions API (App ID: 4435c199-c3da-46b9-a61d-76de3f2c9f82)              |
+| Enterprise Application 1            | GitHub CPS Network Service (App ID: 00000000-0000-0000-0000-000000000001)       |
+| Enterprise Application 2            | GitHub Actions API (App ID: 00000000-0000-0000-0000-000000000002)              |
 
 Both enterprise applications are created automatically in the Entra ID tenant when
 Azure private networking is configured.

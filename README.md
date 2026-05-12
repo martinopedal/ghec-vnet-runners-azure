@@ -472,8 +472,8 @@ Outbound traffic from the runner subnet **must not** be subject to TLS inspectio
 |---|---|
 | Subscription Contributor | Register `GitHub.Network` resource provider |
 | Network Contributor | Delegate subnet, manage network resources |
-| Enterprise App: GitHub CPS Network Service | `85c49807-809d-4249-86e7-192762525474` (auto-created) |
-| Enterprise App: GitHub Actions API | `4435c199-c3da-46b9-a61d-76de3f2c9f82` (auto-created) |
+| Enterprise App: GitHub CPS Network Service | `00000000-0000-0000-0000-000000000001` (auto-created) |
+| Enterprise App: GitHub Actions API | `00000000-0000-0000-0000-000000000002` (auto-created) |
 
 ---
 
