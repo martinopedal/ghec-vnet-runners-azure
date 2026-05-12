@@ -382,8 +382,8 @@ https://docs.github.com/en/organizations/managing-organization-settings/configur
 |---------------------------------------|------------------------------------------------------------------------------------|
 | Azure-rolle: Subscription Contributor | Paakrevd for aa registrere GitHub.Network-resource provideren                     |
 | Azure-rolle: Network Contributor      | Paakrevd for aa delegere subnettet og administrere nettverksressurser              |
-| Enterprise Application 1             | GitHub CPS Network Service (App-ID: 85c49807-809d-4249-86e7-192762525474)         |
-| Enterprise Application 2             | GitHub Actions API (App-ID: 4435c199-c3da-46b9-a61d-76de3f2c9f82)                |
+| Enterprise Application 1             | GitHub CPS Network Service (App-ID: 00000000-0000-0000-0000-000000000001)         |
+| Enterprise Application 2             | GitHub Actions API (App-ID: 00000000-0000-0000-0000-000000000002)                |
 
 Begge enterprise-applikasjonene opprettes automatisk i Entra ID-tenanten naar Azure
 privat nettverksintegrasjon konfigureres.
