@@ -12,7 +12,7 @@ permissions:
 jobs:
   terraform:
     name: Terraform Validate
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, personal, linux, x64]
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
@@ -33,7 +33,7 @@ jobs:
 
   style:
     name: Style Check
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, personal, linux, x64]
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
