@@ -10,7 +10,13 @@ permissions:
   contents: read
 
 jobs:
+  decide-runner:
+    uses: martinopedal/github-runners-alz-corp-cookbook/.github/workflows/decide-runner.yml@v1
+    with:
+      self-hosted-labels: '["self-hosted", "personal", "pub", "linux"]'
+
   terraform:
+    needs: decide-runner
     name: Terraform Validate
     runs-on: [self-hosted, personal-linux]
     steps:
@@ -32,6 +38,7 @@ jobs:
         run: terraform fmt -check -recursive
 
   style:
+    needs: decide-runner
     name: Style Check
     runs-on: [self-hosted, personal-linux]
     steps:
