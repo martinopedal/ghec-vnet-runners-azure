@@ -13,7 +13,7 @@ jobs:
   decide-runner:
     uses: martinopedal/github-runners-alz-corp-cookbook/.github/workflows/decide-runner.yml@v1
     with:
-      self-hosted-labels: '["self-hosted", "personal", "pub", "linux"]'
+      self-hosted-labels: '["self-hosted", "public-linux"]'
 
   terraform:
     needs: decide-runner
